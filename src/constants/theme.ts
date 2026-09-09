@@ -1,65 +1,109 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
-
-import '@/global.css';
-
-import { Platform } from 'react-native';
-
-export const Colors = {
-  light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
-  },
-  dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
+export const colors = {
+  primaryGreen: "#495E57",
+  primaryYellow: "#F4CE14",
+  coral: "#EE9972",
+  peach: "#FBDABB",
+  light: "#EDEFEE",
+  dark: "#333333",
+  white: "#FFFFFF",
+  transparent: "transparent",
+  // 60% opacity, for overlays and pressed/disabled states
+  translucent: {
+    primaryGreen: "#495E5799",
+    primaryYellow: "#F4CE1499",
+    coral: "#EE997299",
+    peach: "#FBDABB99",
+    light: "#EDEFEE99",
+    dark: "#33333399",
+    white: "#FFFFFF99",
   },
 } as const;
 
-export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
-
-export const Fonts = Platform.select({
-  ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
-    sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
-    serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
-    rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
-    mono: 'ui-monospace',
+export const fonts = {
+  karla: {
+    regular: "Karla_400Regular",
+    medium: "Karla_500Medium",
+    bold: "Karla_700Bold",
+    extraBold: "Karla_800ExtraBold",
   },
-  default: {
-    sans: 'normal',
-    serif: 'serif',
-    rounded: 'normal',
-    mono: 'monospace',
+  markazi: {
+    regular: "MarkaziText_400Regular",
+    medium: "MarkaziText_500Medium",
   },
-  web: {
-    sans: 'var(--font-display)',
-    serif: 'var(--font-serif)',
-    rounded: 'var(--font-rounded)',
-    mono: 'var(--font-mono)',
-  },
-});
-
-export const Spacing = {
-  half: 2,
-  one: 4,
-  two: 8,
-  three: 16,
-  four: 24,
-  five: 32,
-  six: 64,
 } as const;
 
-export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
-export const MaxContentWidth = 800;
+export const fontSizes = {
+  xs: 14,
+  sm: 16,
+  md: 18,
+  lg: 20,
+  xl: 24,
+  "2xl": 40,
+} as const;
+
+export const lineHeights = {
+  xs: 18,
+  sm: 20,
+  md: 22,
+  lg: 26,
+  xl: 48,
+} as const;
+
+export const spacing = {
+  xxs: 2,
+  xs: 4,
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 20,
+  "2xl": 24,
+  "3xl": 32,
+  "4xl": 40,
+  "5xl": 48,
+  "6xl": 64,
+  "7xl": 80,
+  "8xl": 96,
+} as const;
+
+export const radius = {
+  xxs: 2,
+  xs: 4,
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 20,
+  "2xl": 24,
+  "3xl": 32,
+  full: 999,
+} as const;
+
+export const borderWidth = {
+  xs: 1,
+  sm: 2,
+  md: 4,
+  lg: 8,
+  xl: 12,
+} as const;
+
+export const sizes = {
+  xxs: 24,
+  xs: 32,
+  sm: 40,
+  md: 48,
+  lg: 56,
+  xl: 64,
+  "2xl": 80,
+  "3xl": 96,
+} as const;
+
+export const shadowElevation = {
+  sm: 10,
+  md: 12,
+  lg: 16,
+} as const;
+
+export const shadowOpacity = {
+  sm: 0.12,
+  md: 0.14,
+  lg: 0.18,
+} as const;
