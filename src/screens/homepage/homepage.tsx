@@ -47,6 +47,9 @@ export default function Homepage() {
     selectedCategories,
   });
   const initials = getInitials(profile.firstName, profile.lastName);
+  // Android leaves the list's top padding (the pinned search bar, added by the
+  // library) out of its scroll range, so that much of the end is unreachable.
+  const androidInset = Platform.OS === "android" ? tabsHeight : 0;
 
   function toggleCategory(category: string) {
     setSelectedCategories((current) => {
@@ -83,15 +86,11 @@ export default function Homepage() {
       >
         <StickyHeaderFlatList<MenuItemData>
           ref={listRef}
-          // The list scrolls under the pinned search bar, so its content only
-          // needs to fill the body plus the hero for the hero to scroll away
-          // with few results. The library also pads the bottom by the search
-          // bar's height, which Fabric already counts; cancel it here.
           contentContainerStyle={[
             styles.content,
             {
-              minHeight: bodyHeight + heroHeight - tabsHeight,
-              paddingBottom: spacing["2xl"] - tabsHeight,
+              minHeight: bodyHeight + heroHeight - tabsHeight + androidInset,
+              paddingBottom: spacing["2xl"] - tabsHeight + androidInset,
             },
           ]}
           data={menu}

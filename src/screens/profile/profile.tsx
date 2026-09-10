@@ -14,6 +14,7 @@ import { AppFooter } from "@/components/app-footer/app-footer";
 import { AvatarField } from "@/components/avatar-field/avatar-field";
 import { FormField } from "@/components/form-field/form-field";
 import { Header } from "@/components/header/header";
+import { RequiredLegend } from "@/components/required-legend/required-legend";
 import { SettingToggle } from "@/components/setting-toggle/setting-toggle";
 import { Toast, type ToastVariant } from "@/components/toast/toast";
 import { type ProfileData, useUser } from "@/context/user-context";
@@ -184,6 +185,7 @@ export default function Profile() {
             />
             <FormField
               label="First name"
+              required
               value={draft.firstName}
               onChangeText={(value) => updateField("firstName", value)}
               autoCapitalize="words"
@@ -198,6 +200,7 @@ export default function Profile() {
             />
             <FormField
               label="Email"
+              required
               value={draft.email}
               onChangeText={(value) => updateField("email", value)}
               keyboardType="email-address"
@@ -215,6 +218,7 @@ export default function Profile() {
               keyboardType="phone-pad"
               placeholder="(000) 000-0000"
             />
+            <RequiredLegend />
           </View>
 
           <View style={styles.section}>
