@@ -12,8 +12,7 @@ and iOS and is built with Expo Router, React Native, and TypeScript.
 ## Demo
 
 <p align="center">
-  <a href="[https://github.com/user-attachments/assets/YOUR-VIDEO-ID](https://github.com/user-attachments/assets/da45e53e-2734-4f33-ab44-f59d9393b2c7
-)">
+  <a href="https://github.com/user-attachments/assets/da45e53e-2734-4f33-ab44-f59d9393b2c7">
     <img src="docs/demo.gif" alt="Little Lemon demo: scrolling the menu, searching, and filtering by category" width="300">
   </a>
   <br>
