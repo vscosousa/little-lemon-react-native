@@ -11,12 +11,15 @@ and iOS and is built with Expo Router, React Native, and TypeScript.
 
 ## Demo
 
-<!--
-  To add the video: open this README on github.com, click the pencil (Edit),
-  and drag your recording onto the line below this comment. GitHub uploads it
-  and inserts a user-attachments URL, which renders as an inline player.
-  Commit the change.
--->
+<p align="center">
+  <a href="[https://github.com/user-attachments/assets/YOUR-VIDEO-ID](https://github.com/user-attachments/assets/da45e53e-2734-4f33-ab44-f59d9393b2c7
+)">
+    <img src="docs/demo.gif" alt="Little Lemon demo: scrolling the menu, searching, and filtering by category" width="300">
+  </a>
+  <br>
+  <sub>Tap the preview to watch the full walkthrough (1:15)</sub>
+</p>
+
 
 ## Screenshots
 
