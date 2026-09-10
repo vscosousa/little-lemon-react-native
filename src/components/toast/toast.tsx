@@ -4,27 +4,29 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import styles from "./styles";
 
-export type ToastVariant = "success" | "error" | "info";
+/** Semantic and visual tones supported by {@link Toast}. */
+export type ToastVariant = "success" | "error";
 
 type ToastProps = {
   /** The feedback text to display. */
   message: string;
   /** Called after the toast finishes its exit animation. */
   onDismiss: () => void;
-  /** Visual/semantic tone. Defaults to `"info"`. */
-  variant?: ToastVariant;
-  /** Milliseconds to remain visible before auto-dismissing. Defaults to `3000`. */
-  duration?: number;
+  /** Visual/semantic tone. */
+  variant: ToastVariant;
 };
+
+const DURATION_MS = 3000;
 
 const indicatorStyles = {
   success: styles.successIndicator,
   error: styles.errorIndicator,
-  info: styles.infoIndicator,
 };
 
 /**
  * Brief, non-blocking feedback banner that animates in, auto-dismisses, and animates out.
+ *
+ * @param props - Toast content, tone, and dismissal callback.
  * @returns The rendered toast.
  * @example
  * {toast && (
@@ -35,12 +37,7 @@ const indicatorStyles = {
  *   />
  * )}
  */
-export function Toast({
-  message,
-  onDismiss,
-  variant = "info",
-  duration = 3000,
-}: ToastProps) {
+export function Toast({ message, onDismiss, variant }: ToastProps) {
   const insets = useSafeAreaInsets();
   const [progress] = useState(() => new Animated.Value(0));
   const onDismissRef = useRef(onDismiss);
@@ -66,13 +63,13 @@ export function Toast({
       }).start(({ finished }) => {
         if (finished) onDismissRef.current();
       });
-    }, duration);
+    }, DURATION_MS);
 
     return () => {
       clearTimeout(timeout);
       progress.stopAnimation();
     };
-  }, [duration, progress]);
+  }, [progress]);
 
   return (
     <Animated.View

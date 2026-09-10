@@ -17,6 +17,8 @@ type SettingToggleProps = {
 
 /**
  * Binary setting/preference row with a label and a switch.
+ *
+ * @param props - Label, controlled value, change callback, and divider option.
  * @returns The rendered row.
  * @example
  * <SettingToggle
@@ -47,7 +49,6 @@ export function SettingToggle({
         <Switch
           accessible={false}
           ios_backgroundColor={colors.light}
-          onValueChange={onValueChange}
           pointerEvents="none"
           thumbColor={colors.white}
           trackColor={{ false: colors.light, true: colors.primaryGreen }}

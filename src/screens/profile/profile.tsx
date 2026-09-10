@@ -1,6 +1,5 @@
 import { File, Paths } from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
-import { router } from "expo-router";
 import { useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -10,20 +9,22 @@ import {
   View,
 } from "react-native";
 
-import { AppButton } from "@/components/app-button";
-import { AppFooter } from "@/components/app-footer";
-import { AvatarField } from "@/components/avatar-field";
-import { FormField } from "@/components/form-field";
-import { Header } from "@/components/header";
-import { SettingToggle } from "@/components/setting-toggle";
-import { Toast, type ToastVariant } from "@/components/toast";
+import { AppButton } from "@/components/app-button/app-button";
+import { AppFooter } from "@/components/app-footer/app-footer";
+import { AvatarField } from "@/components/avatar-field/avatar-field";
+import { FormField } from "@/components/form-field/form-field";
+import { Header } from "@/components/header/header";
+import { SettingToggle } from "@/components/setting-toggle/setting-toggle";
+import { Toast, type ToastVariant } from "@/components/toast/toast";
 import { type ProfileData, useUser } from "@/context/user-context";
 import { useScrollElevation } from "@/hooks/use-scroll-elevation";
+import { getInitials } from "@/utils/profile";
 import { isValidEmail, isValidName } from "@/utils/profile-validation";
 
 import styles from "./styles";
 
 type NotificationKey = keyof ProfileData["notifications"];
+
 type ToastMessage = {
   id: number;
   message: string;
@@ -40,7 +41,11 @@ const NOTIFICATION_OPTIONS: { key: NotificationKey; label: string }[] = [
 ];
 
 /**
- * Editable profile screen: personal info, notification settings, and log out.
+ * Edits personal details, avatar, and email-notification preferences.
+ *
+ * Changes remain in local draft state until saved. The screen also coordinates
+ * image persistence, validation feedback, discard, and logout behavior.
+ *
  * @returns The rendered screen.
  */
 export default function Profile() {
@@ -48,27 +53,18 @@ export default function Profile() {
   const [draft, setDraft] = useState<ProfileData>(profile);
   const [isSaving, setIsSaving] = useState(false);
   const [toast, setToast] = useState<ToastMessage | null>(null);
-  const {
-    handleContentSizeChange,
-    handleScroll,
-    handleScrollLayout,
-    isFooterElevated,
-    isHeaderElevated,
-  } = useScrollElevation();
+  const { isFooterElevated, isHeaderElevated, scrollProps } =
+    useScrollElevation();
 
-  const isFirstNameValid = isValidName(draft.firstName);
-  const isEmailValid = isValidEmail(draft.email);
-  const hasChanges = !profilesMatch(draft, profile);
-  const canSave = hasChanges && isFirstNameValid && isEmailValid && !isSaving;
-  const initials = `${draft.firstName[0] ?? ""}${draft.lastName[0] ?? ""}`
-    .toUpperCase()
-    .trim();
+  // Key order is stable: every draft is spread from the stored profile.
+  const hasChanges = JSON.stringify(draft) !== JSON.stringify(profile);
+  const canSave =
+    hasChanges &&
+    isValidName(draft.firstName) &&
+    isValidEmail(draft.email) &&
+    !isSaving;
+  const initials = getInitials(draft.firstName, draft.lastName);
 
-  /**
-   * Updates a single top-level field on the draft profile.
-   * @param key - The field to update.
-   * @param value - The field's new value.
-   */
   function updateField<Key extends keyof ProfileData>(
     key: Key,
     value: ProfileData[Key],
@@ -76,35 +72,18 @@ export default function Profile() {
     setDraft((current) => ({ ...current, [key]: value }));
   }
 
-  /**
-   * Updates a single notification preference on the draft profile.
-   * @param key - The notification preference to update.
-   * @param value - The preference's new value.
-   */
   function updateNotification(key: NotificationKey, value: boolean) {
     setDraft((current) => ({
       ...current,
-      notifications: {
-        ...current.notifications,
-        [key]: value,
-      },
+      notifications: { ...current.notifications, [key]: value },
     }));
   }
 
-  /**
-   * Queues a toast message, replacing any toast currently shown.
-   * @param message - The feedback text to display.
-   * @param variant - The toast's visual/semantic tone.
-   */
   function showToast(message: string, variant: ToastVariant) {
     nextToastId += 1;
     setToast({ id: nextToastId, message, variant });
   }
 
-  /**
-   * Requests photo library access and sets the picked image as the draft avatar.
-   * @returns A promise that resolves once the picker flow finishes.
-   */
   async function pickImage() {
     try {
       const permission =
@@ -130,10 +109,6 @@ export default function Profile() {
     }
   }
 
-  /**
-   * Persists the draft profile, copying a newly picked image and clearing the old one.
-   * @returns A promise that resolves once saving finishes.
-   */
   async function handleSave() {
     if (!canSave) return;
 
@@ -170,10 +145,6 @@ export default function Profile() {
     }
   }
 
-  /**
-   * Clears the stored session and profile image, then signs the user out.
-   * @returns A promise that resolves once log out finishes.
-   */
   async function handleLogOut() {
     try {
       await logOut();
@@ -190,7 +161,6 @@ export default function Profile() {
     >
       <Header
         showBackButton
-        onBackPress={() => router.canGoBack() && router.back()}
         showAvatar
         avatarUri={draft.imageUri}
         avatarInitials={initials}
@@ -198,16 +168,13 @@ export default function Profile() {
       />
 
       <ScrollView
+        {...scrollProps}
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
-        onContentSizeChange={handleContentSizeChange}
-        onLayout={handleScrollLayout}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.sections}>
-          <View>
+          <View style={styles.section}>
             <Text style={styles.sectionTitle}>Personal information</Text>
             <AvatarField
               imageUri={draft.imageUri}
@@ -247,11 +214,10 @@ export default function Profile() {
               }
               keyboardType="phone-pad"
               placeholder="(000) 000-0000"
-              containerStyle={styles.lastField}
             />
           </View>
 
-          <View>
+          <View style={styles.section}>
             <Text style={styles.sectionTitle}>Email notifications</Text>
             <View style={styles.notificationGroup}>
               {NOTIFICATION_OPTIONS.map((option, index) => (
@@ -304,32 +270,7 @@ export default function Profile() {
   );
 }
 
-/**
- * Compares two profiles field by field, ignoring reference identity.
- * @param first - The first profile.
- * @param second - The second profile.
- * @returns Whether every field of `first` and `second` matches.
- */
-function profilesMatch(first: ProfileData, second: ProfileData) {
-  return (
-    first.firstName === second.firstName &&
-    first.lastName === second.lastName &&
-    first.email === second.email &&
-    first.phoneNumber === second.phoneNumber &&
-    first.imageUri === second.imageUri &&
-    first.notifications.orderStatuses === second.notifications.orderStatuses &&
-    first.notifications.passwordChanges ===
-      second.notifications.passwordChanges &&
-    first.notifications.specialOffers === second.notifications.specialOffers &&
-    first.notifications.newsletter === second.notifications.newsletter
-  );
-}
-
-/**
- * Copies a picked image into permanent document storage, if not already there.
- * @param uri - The picked image's URI.
- * @returns The persisted image's URI.
- */
+/** Copies a picked image into permanent document storage, if not already there. */
 async function persistProfileImage(uri: string) {
   if (Platform.OS === "web" || uri.startsWith(Paths.document.uri)) return uri;
 
@@ -342,10 +283,7 @@ async function persistProfileImage(uri: string) {
   return destination.uri;
 }
 
-/**
- * Best-effort delete of a previously persisted profile image.
- * @param uri - The persisted image's URI.
- */
+/** Best-effort delete of a previously persisted profile image. */
 function removePersistedProfileImage(uri: string) {
   if (Platform.OS === "web" || !uri.startsWith(Paths.document.uri)) return;
 

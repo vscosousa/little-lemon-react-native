@@ -1,8 +1,8 @@
 import { View } from "react-native";
 
-import { AppButton } from "@/components/app-button";
-import { Avatar } from "@/components/avatar";
-import { FormControl } from "@/components/form-control";
+import { AppButton } from "@/components/app-button/app-button";
+import { Avatar } from "@/components/avatar/avatar";
+import { FormControl } from "@/components/form-control/form-control";
 
 import styles from "./styles";
 
@@ -11,8 +11,6 @@ type AvatarFieldProps = {
   imageUri?: string | null;
   /** Initials fallback passed through to the avatar. */
   initials?: string;
-  /** The field's visible label. Defaults to `"Avatar"`. */
-  label?: string;
   /** Called when "Add photo"/"Change" is pressed. */
   onChangePress: () => void;
   /** Called when "Remove" is pressed. Only rendered while `imageUri` is set. */
@@ -21,6 +19,8 @@ type AvatarFieldProps = {
 
 /**
  * Editable profile avatar with change/remove actions, presented with form-field styling.
+ *
+ * @param props - Avatar-field properties and action callbacks.
  * @returns The rendered field.
  * @example
  * <AvatarField
@@ -33,12 +33,11 @@ type AvatarFieldProps = {
 export function AvatarField({
   imageUri,
   initials,
-  label = "Avatar",
   onChangePress,
   onRemovePress,
 }: AvatarFieldProps) {
   return (
-    <FormControl label={label}>
+    <FormControl label="Avatar">
       <View style={styles.control}>
         <Avatar imageUri={imageUri} initials={initials} />
         <View style={styles.actions}>

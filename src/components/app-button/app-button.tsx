@@ -8,6 +8,7 @@ import {
 
 import styles from "./styles";
 
+/** Available Little Lemon button color treatments. */
 type ButtonVariant = "primary" | "secondary" | "yellow";
 
 type AppButtonProps = {
@@ -29,6 +30,8 @@ type AppButtonProps = {
 
 /**
  * Primary, secondary, or yellow brand action button, with an optional compact size.
+ *
+ * @param props - Button properties.
  * @returns The rendered button.
  * @example
  * <AppButton label="Save changes" variant="yellow" onPress={handleSave} />
@@ -45,7 +48,6 @@ export function AppButton({
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityState={{ disabled }}
       disabled={disabled}
       onPress={onPress}
       style={({ pressed }) => [

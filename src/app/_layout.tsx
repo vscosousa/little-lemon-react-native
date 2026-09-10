@@ -1,5 +1,7 @@
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
+import { SQLiteProvider } from "expo-sqlite";
+import { Suspense } from "react";
 import {
   initialWindowMetrics,
   SafeAreaProvider,
@@ -7,9 +9,12 @@ import {
 
 import { fonts } from "@/constants/theme";
 import { UserProvider, useUser } from "@/context/user-context";
+import { migrateMenuDb } from "@/data/menu-database";
 
 /**
- * Loads app fonts, wires up safe-area and user context providers, and renders the app.
+ * Loads bundled fonts and composes the app's safe-area, SQLite, and user-state
+ * providers around the root navigator.
+ *
  * @returns The app root, or `null` while fonts are still loading.
  */
 export default function RootLayout() {
@@ -30,15 +35,20 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <UserProvider>
-        <RootNavigator />
-      </UserProvider>
+      <Suspense fallback={null}>
+        <SQLiteProvider databaseName="littlelemon.db" onInit={migrateMenuDb} useSuspense>
+          <UserProvider>
+            <RootNavigator />
+          </UserProvider>
+        </SQLiteProvider>
+      </Suspense>
     </SafeAreaProvider>
   );
 }
 
 /**
- * Routes to onboarding or the profile screen based on onboarding state.
+ * Protects onboarding and signed-in routes using the restored onboarding state.
+ *
  * @returns The navigation stack, or `null` while user state is still loading.
  */
 function RootNavigator() {
@@ -55,6 +65,7 @@ function RootNavigator() {
       </Stack.Protected>
 
       <Stack.Protected guard={isOnboarded}>
+        <Stack.Screen name="homepage" />
         <Stack.Screen name="profile" />
       </Stack.Protected>
     </Stack>

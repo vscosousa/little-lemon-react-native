@@ -1,5 +1,6 @@
 /**
  * Checks whether a value contains only letters, spaces, apostrophes, and hyphens.
+ *
  * @param value - The raw input to validate.
  * @returns Whether the value is a valid name.
  * @example
@@ -12,6 +13,7 @@ export function isValidName(value: string) {
 
 /**
  * Checks whether a value is a syntactically valid email address.
+ *
  * @param value - The raw input to validate.
  * @returns Whether the value is a valid email address.
  * @example

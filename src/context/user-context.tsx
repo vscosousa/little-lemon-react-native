@@ -7,13 +7,19 @@ import {
   useState,
 } from "react";
 
-const ONBOARDING_STORAGE_KEY = "isOnboarded";
 const PROFILE_STORAGE_KEY = "profile";
+/** Pre-cleanup onboarding flag; a stored profile now implies onboarding. */
+const LEGACY_ONBOARDING_STORAGE_KEY = "isOnboarded";
 
+/** Persisted Little Lemon customer profile and notification preferences. */
 export type ProfileData = {
+  /** Customer's given name. */
   firstName: string;
+  /** Customer's family name, if provided. */
   lastName: string;
+  /** Customer's contact email address. */
   email: string;
+  /** Customer's formatted phone number, if provided. */
   phoneNumber: string;
   /** URI of the profile image, or `null` when none is set. */
   imageUri: string | null;
@@ -43,7 +49,7 @@ const EMPTY_PROFILE: ProfileData = {
 type UserContextValue = {
   /** Whether persisted onboarding/profile state is still being restored. */
   isLoading: boolean;
-  /** Whether {@link completeOnboarding} has been called. */
+  /** Whether onboarding was completed and persisted. */
   isOnboarded: boolean;
   /** The current profile, or the empty profile before onboarding. */
   profile: ProfileData;
@@ -59,6 +65,10 @@ const UserContext = createContext<UserContextValue | null>(null);
 
 /**
  * Loads, persists, and exposes onboarding and profile state via {@link useUser}.
+ * A persisted profile means onboarding is complete.
+ *
+ * @param props - Provider properties.
+ * @param props.children - Descendants that can access the user context.
  * @returns A context provider wrapping `children`.
  * @example
  * <SafeAreaProvider>
@@ -73,19 +83,13 @@ export function UserProvider({ children }: PropsWithChildren) {
   const [profile, setProfile] = useState<ProfileData>(EMPTY_PROFILE);
 
   useEffect(() => {
-    /** Loads persisted onboarding and profile state on mount. */
     async function restoreUserState() {
       try {
-        const [onboardingValue, profileValue] = await AsyncStorage.multiGet([
-          ONBOARDING_STORAGE_KEY,
-          PROFILE_STORAGE_KEY,
-        ]);
+        const storedProfile = await AsyncStorage.getItem(PROFILE_STORAGE_KEY);
 
-        setIsOnboarded(onboardingValue[1] === "true");
-
-        if (profileValue[1]) {
+        if (storedProfile) {
           const savedProfile = JSON.parse(
-            profileValue[1],
+            storedProfile,
           ) as Partial<ProfileData>;
           setProfile({
             ...EMPTY_PROFILE,
@@ -95,10 +99,10 @@ export function UserProvider({ children }: PropsWithChildren) {
               ...savedProfile.notifications,
             },
           });
+          setIsOnboarded(true);
         }
       } catch {
-        setIsOnboarded(false);
-        setProfile(EMPTY_PROFILE);
+        // Unreadable storage leaves the user on onboarding.
       } finally {
         setIsLoading(false);
       }
@@ -107,11 +111,6 @@ export function UserProvider({ children }: PropsWithChildren) {
     void restoreUserState();
   }, []);
 
-  /**
-   * Creates the initial profile from the onboarding form and marks onboarding done.
-   * @param firstName - The onboarding form's first name input.
-   * @param email - The onboarding form's email input.
-   */
   async function completeOnboarding(firstName: string, email: string) {
     const initialProfile: ProfileData = {
       ...EMPTY_PROFILE,
@@ -119,18 +118,10 @@ export function UserProvider({ children }: PropsWithChildren) {
       email: email.trim().toLowerCase(),
     };
 
-    await AsyncStorage.multiSet([
-      [ONBOARDING_STORAGE_KEY, "true"],
-      [PROFILE_STORAGE_KEY, JSON.stringify(initialProfile)],
-    ]);
-    setProfile(initialProfile);
+    await saveProfile(initialProfile);
     setIsOnboarded(true);
   }
 
-  /**
-   * Persists the given profile and updates the current profile state.
-   * @param updatedProfile - The full profile to persist.
-   */
   async function saveProfile(updatedProfile: ProfileData) {
     await AsyncStorage.setItem(
       PROFILE_STORAGE_KEY,
@@ -139,11 +130,10 @@ export function UserProvider({ children }: PropsWithChildren) {
     setProfile(updatedProfile);
   }
 
-  /** Clears persisted onboarding and profile state and resets to an empty profile. */
   async function logOut() {
     await AsyncStorage.multiRemove([
-      ONBOARDING_STORAGE_KEY,
       PROFILE_STORAGE_KEY,
+      LEGACY_ONBOARDING_STORAGE_KEY,
     ]);
     setProfile(EMPTY_PROFILE);
     setIsOnboarded(false);
@@ -167,7 +157,9 @@ export function UserProvider({ children }: PropsWithChildren) {
 
 /**
  * Accesses onboarding and profile state and actions from {@link UserProvider}.
+ *
  * @returns The current onboarding/profile state and actions.
+ * @throws If called outside a {@link UserProvider}.
  * @example
  * const { profile, saveProfile, logOut } = useUser();
  */

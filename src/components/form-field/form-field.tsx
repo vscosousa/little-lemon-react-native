@@ -1,13 +1,8 @@
 import { type ComponentProps, useState } from "react";
-import {
-  type StyleProp,
-  TextInput,
-  type TextStyle,
-  type ViewStyle,
-} from "react-native";
+import { TextInput } from "react-native";
 import { MaskedTextInput } from "react-native-mask-text";
 
-import { FormControl } from "@/components/form-control";
+import { FormControl } from "@/components/form-control/form-control";
 import { colors } from "@/constants/theme";
 
 import styles from "./styles";
@@ -17,18 +12,15 @@ type FormFieldProps = ComponentProps<typeof TextInput> & {
   label: string;
   /** `react-native-mask-text` mask pattern, e.g. `"(999) 999-9999"`. Renders a masked input when set. */
   mask?: string;
-  /** Extra style(s) merged onto the field container. */
-  containerStyle?: StyleProp<ViewStyle>;
-  /** Extra style(s) merged onto the text input. */
-  inputStyle?: StyleProp<TextStyle>;
-  /** Extra style(s) merged onto the label text. */
-  labelStyle?: StyleProp<TextStyle>;
-  /** Called with both the masked and raw text on every change, when `mask` is set. */
-  onChangeMaskedText?: (text: string, rawText: string) => void;
 };
 
 /**
  * Labeled text input, optionally mask-formatted, with shared focus styling.
+ *
+ * Native `TextInput` properties are forwarded to the rendered plain or masked
+ * input, while accessibility and brand-color defaults are supplied centrally.
+ *
+ * @param props - Label, optional mask, and text-input properties.
  * @returns The rendered field.
  * @example
  * <FormField
@@ -42,11 +34,7 @@ type FormFieldProps = ComponentProps<typeof TextInput> & {
 export function FormField({
   label,
   mask,
-  containerStyle,
-  inputStyle,
-  labelStyle,
   onChangeText,
-  onChangeMaskedText,
   onFocus,
   onBlur,
   ...inputProps
@@ -67,28 +55,16 @@ export function FormField({
       setIsFocused(false);
       onBlur?.(event);
     },
-    style: [
-      styles.control,
-      styles.input,
-      isFocused && styles.inputFocused,
-      inputStyle,
-    ],
+    style: [styles.control, styles.input, isFocused && styles.inputFocused],
   };
 
   return (
-    <FormControl
-      label={label}
-      containerStyle={containerStyle}
-      labelStyle={labelStyle}
-    >
+    <FormControl label={label}>
       {mask ? (
         <MaskedTextInput
           {...sharedProps}
           mask={mask}
-          onChangeText={(text, rawText) => {
-            onChangeText?.(text);
-            onChangeMaskedText?.(text, rawText);
-          }}
+          onChangeText={(text) => onChangeText?.(text)}
         />
       ) : (
         <TextInput {...sharedProps} onChangeText={onChangeText} />

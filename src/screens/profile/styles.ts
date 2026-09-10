@@ -20,15 +20,14 @@ const styles = StyleSheet.create({
   sections: {
     gap: spacing["3xl"],
   },
+  section: {
+    gap: spacing.xl,
+  },
   sectionTitle: {
-    marginBottom: spacing.xl,
     color: colors.dark,
     fontFamily: fonts.karla.extraBold,
     fontSize: fontSizes.lg,
     lineHeight: lineHeights.lg,
-  },
-  lastField: {
-    marginBottom: 0,
   },
   notificationGroup: {
     overflow: "hidden",
@@ -38,7 +37,6 @@ const styles = StyleSheet.create({
   },
   footerButtons: {
     flexDirection: "row",
-    justifyContent: "center",
     gap: spacing.md,
     marginTop: spacing.md,
   },

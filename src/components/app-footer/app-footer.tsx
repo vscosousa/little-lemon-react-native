@@ -10,6 +10,8 @@ type AppFooterProps = PropsWithChildren<{
 
 /**
  * Content-sized screen footer with bottom safe-area handling and an optional top shadow.
+ *
+ * @param props - Footer properties and content.
  * @returns The rendered footer.
  * @example
  * <AppFooter elevated={isFooterElevated}>

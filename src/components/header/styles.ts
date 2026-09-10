@@ -14,13 +14,15 @@ const styles = StyleSheet.create({
     zIndex: 1,
     backgroundColor: colors.white,
   },
+  safeAreaLight: {
+    backgroundColor: colors.primaryGreen,
+  },
   header: {
     minHeight: 64,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: spacing.lg,
-    backgroundColor: colors.white,
   },
   elevated: {
     shadowColor: colors.dark,
@@ -42,7 +44,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: radius.full,
-    backgroundColor: colors.transparent,
   },
   backIcon: {
     width: 12,
@@ -54,6 +55,9 @@ const styles = StyleSheet.create({
     borderRadius: radius.xxs,
     transform: [{ rotate: "45deg" }],
   },
+  backIconLight: {
+    borderColor: colors.white,
+  },
   logo: {
     position: "absolute",
     left: "50%",
@@ -64,6 +68,9 @@ const styles = StyleSheet.create({
   },
   pressed: {
     backgroundColor: colors.light,
+  },
+  pressedLight: {
+    backgroundColor: colors.translucent.dark,
   },
 });
 

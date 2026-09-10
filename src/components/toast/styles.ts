@@ -47,9 +47,6 @@ const styles = StyleSheet.create({
   errorIndicator: {
     backgroundColor: colors.coral,
   },
-  infoIndicator: {
-    backgroundColor: colors.primaryYellow,
-  },
   message: {
     flex: 1,
     color: colors.dark,

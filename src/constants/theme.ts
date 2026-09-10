@@ -1,3 +1,4 @@
+/** Brand, neutral, and translucent colors shared by the application. */
 export const colors = {
   primaryGreen: "#495E57",
   primaryYellow: "#F4CE14",
@@ -7,7 +8,7 @@ export const colors = {
   dark: "#333333",
   white: "#FFFFFF",
   transparent: "transparent",
-  // 60% opacity, for overlays and pressed/disabled states
+  /** Sixty-percent opacity variants for overlays and interaction states. */
   translucent: {
     primaryGreen: "#495E5799",
     primaryYellow: "#F4CE1499",
@@ -19,6 +20,7 @@ export const colors = {
   },
 } as const;
 
+/** Registered Expo Font family names and supported weights. */
 export const fonts = {
   karla: {
     regular: "Karla_400Regular",
@@ -32,6 +34,7 @@ export const fonts = {
   },
 } as const;
 
+/** Semantic font-size scale, expressed in density-independent pixels. */
 export const fontSizes = {
   xs: 14,
   sm: 16,
@@ -39,16 +42,20 @@ export const fontSizes = {
   lg: 20,
   xl: 24,
   "2xl": 40,
+  "3xl": 64,
 } as const;
 
+/** Line-height scale paired with the application's typography. */
 export const lineHeights = {
   xs: 18,
   sm: 20,
   md: 22,
   lg: 26,
   xl: 48,
+  "2xl": 72,
 } as const;
 
+/** Spacing scale used for layout, padding, margins, and gaps. */
 export const spacing = {
   xxs: 2,
   xs: 4,
@@ -65,6 +72,7 @@ export const spacing = {
   "8xl": 96,
 } as const;
 
+/** Border-radius scale, including a fully rounded value. */
 export const radius = {
   xxs: 2,
   xs: 4,
@@ -77,6 +85,7 @@ export const radius = {
   full: 999,
 } as const;
 
+/** Border-width scale, expressed in density-independent pixels. */
 export const borderWidth = {
   xs: 1,
   sm: 2,
@@ -85,6 +94,7 @@ export const borderWidth = {
   xl: 12,
 } as const;
 
+/** Shared control and avatar size scale. */
 export const sizes = {
   xxs: 24,
   xs: 32,
@@ -96,12 +106,14 @@ export const sizes = {
   "3xl": 96,
 } as const;
 
+/** Android elevation values mirrored by corresponding iOS shadow radii. */
 export const shadowElevation = {
   sm: 10,
   md: 12,
   lg: 16,
 } as const;
 
+/** Opacity levels for component shadows. */
 export const shadowOpacity = {
   sm: 0.12,
   md: 0.14,

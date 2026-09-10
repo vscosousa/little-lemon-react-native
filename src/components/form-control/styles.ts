@@ -9,9 +9,6 @@ import {
 } from "@/constants/theme";
 
 const styles = StyleSheet.create({
-  field: {
-    marginBottom: spacing.xl,
-  },
   label: {
     marginBottom: spacing.sm,
     marginLeft: spacing.xxs,

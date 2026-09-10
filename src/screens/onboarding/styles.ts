@@ -18,7 +18,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing["2xl"],
     paddingTop: spacing["3xl"],
     paddingBottom: spacing["2xl"],
-    backgroundColor: colors.white,
   },
   intro: {
     marginBottom: spacing["3xl"],
@@ -28,8 +27,8 @@ const styles = StyleSheet.create({
     lineHeight: lineHeights.xl,
     textAlign: "center",
   },
-  lastField: {
-    marginBottom: 0,
+  fields: {
+    gap: spacing.xl,
   },
   nextButtonLabel: {
     fontSize: fontSizes.md,
