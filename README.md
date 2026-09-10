@@ -82,14 +82,15 @@ and shadows are defined once in [`src/constants/theme.ts`](src/constants/theme.t
 and screens are built from shared components in
 [`src/components`](src/components).
 
-| Color | Hex |
-| --- | --- |
-| Primary green | `#495E57` |
-| Primary yellow | `#F4CE14` |
-| Coral | `#EE9972` |
-| Peach | `#FBDABB` |
-| Light | `#EDEFEE` |
-| Dark | `#333333` |
+| Preview | Color | Hex |
+| --- | --- | --- |
+| ![Primary green swatch](docs/colors/primary-green.svg) | Primary green | `#495E57` |
+| ![Primary yellow swatch](docs/colors/primary-yellow.svg) | Primary yellow | `#F4CE14` |
+| ![Coral swatch](docs/colors/coral.svg) | Coral | `#EE9972` |
+| ![Peach swatch](docs/colors/peach.svg) | Peach | `#FBDABB` |
+| ![Light swatch](docs/colors/light.svg) | Light | `#EDEFEE` |
+| ![Dark swatch](docs/colors/dark.svg) | Dark | `#333333` |
+| ![White swatch](docs/colors/white.svg) | White | `#FFFFFF` |
 
 Titles use **Markazi Text**. Body text, labels, and buttons use **Karla**.
 
